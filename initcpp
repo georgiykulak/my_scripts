@@ -1,0 +1,20 @@
+#! /bin/bash
+
+readonly _default_cpp_file="tmp.cpp"
+
+[[ -z "${1}" ]] && _file="${_default_cpp_file}" || _file="${1}"
+
+function _write_to_file
+{
+    echo -e "${1}" > "${_file}"
+}
+
+_write_to_file \
+"#include <iostream>\n\n\
+int main()\n\
+{\n\
+\t\n\
+\treturn 0;\n\
+}"
+
+exit $RETURN_SUCCESS

@@ -1,0 +1,9 @@
+#! /bin/bash
+
+if [ $# -eq 0 ]; then
+	sudo protonvpn c -r
+else
+	sudo protonvpn $@
+fi
+
+exit $RETURN_SUCCESS

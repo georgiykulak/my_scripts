@@ -1,0 +1,84 @@
+#! /bin/bash
+
+trash_folder=~/.local/share/Trash
+_recursive=0
+
+move()
+{
+    [ -z ${1} ] \
+    && echo "To trash files follow filenames" && exit 1
+    mv -f ${1} ${trash_folder}/files
+}
+
+check_file()
+{
+    [ ${_recursive} == 0 ] && [ -d ${1} ] \
+    && echo "For deleting directories use the \"-r\" option" && exit 2
+}
+
+require_one_arg()
+{
+    [ $# -gt 1 ] \
+    && echo "Don't follow files with option \"${1}\" !" && exit 3
+}
+
+set_trashinfo()
+{
+    name=${trash_folder}/info/${1}.trashinfo
+    touch ${name}
+    echo "[Trash Info]" > ${name}
+    echo "Path=$(realpath ${1})" >> ${name}
+    echo "DeletionDate=$(date -d @$(date +%s) +"%Y-%m-%dT%H:%M:%S")" >> ${name}
+}
+
+trash_file()
+{
+    check_file ${1}
+    move ${1}
+    set_trashinfo ${1}
+}
+
+if [[ ${1} == "-h" || ${1} == "--help" ]]; then
+    require_one_arg "help"
+    echo -e \
+    "Usage: trash [options] [files|direstories...]...\n" \
+    "\bOptions:\n"                                       \
+    "  -h, --help\t\tPrint this message and exit.\n"     \
+    "  -r, --recursive\tTrash also directories.\n"       \
+    "  -c, --clear\t\tClear trash bin.\n"                \
+    "  --remove\t\tRemove trash directory\n"
+    #TODO "  -b, --back\t\tGet trashed file back\n\n"
+    exit $RETURN_SUCCESS
+fi
+
+if [[ ${1} == "--remove" ]]; then
+    sudo rm -rfv ${trash_folder}
+    exit $RETURN_SUCCESS
+fi
+
+if [[ ${1} == "-r" || ${1} == "--recursive" ]]; then
+    _recursive=1
+    flag=0
+    for i in $@
+    do
+	if [ ${flag} -eq 0 ]; then
+	    flag=1
+	else
+	    trash_file ${i}
+	fi
+    done
+    exit $RETURN_SUCCESS
+fi
+
+if [[ ${1} == "-c" || ${1} == "--clear" ]]; then
+    require_one_arg "clear"
+    sudo rm -rfv ${trash_folder}/files/* ${trash_folder}/info/*.trashinfo
+    exit $RETURN_SUCCESS
+fi
+
+for i in $@
+do
+     trash_file ${i}
+done
+
+exit $RETURN_SUCCESS

@@ -1,0 +1,20 @@
+#! /bin/bash
+
+# Remove "[enter manually]" comments and this line after the configuration
+echo "Setup this file before work!" && exit 1
+
+# Run VNC Viewer
+# You'll have to create/open connection
+# To make new connection you should put "..." [enter manually] in "VNC Server"
+readonly path_to_vncviewer=~/Applications/vnc-viewer
+${path_to_vncviewer}/usr/bin/vncviewer &
+
+# Run VPN (OpenConnect)
+# (Also you can use Cisco AnyConnect)
+# You'll have to enter:
+#   "Password"
+readonly vpnserver="..." # [enter manually]
+readonly vpn_user="..." # [enter manually]
+sudo openconnect --servercert pin-sha256:apXHN7pCWHEENwntmMNB8TRYvSqkW6BAQe0RGirpfhI= -q --user=${vpn_user} ${vpnserver}
+
+exit $RETURN_SUCCESS
