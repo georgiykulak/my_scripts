@@ -1,20 +1,25 @@
 #! /bin/bash
 
-readonly _default_cpp_file="tmp.cpp"
+readonly _default_cpp_file="main.cpp"
 
 [[ -z "${1}" ]] && _file="${_default_cpp_file}" || _file="${1}"
 
 function _write_to_file
 {
-    echo -e "${1}" > "${_file}"
+    if [[ -s "${_file}" ]]
+    then
+	echo "Error: File is not empty!"
+    else
+    	echo -e "${1}" > "${_file}"
+    fi
 }
 
 _write_to_file \
 "#include <iostream>\n\n\
 int main()\n\
 {\n\
-\t\n\
-\treturn 0;\n\
+    \n\
+    return 0;\n\
 }"
 
 exit $RETURN_SUCCESS
