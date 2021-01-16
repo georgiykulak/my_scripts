@@ -1,0 +1,47 @@
+#! /bin/bash
+#Moved change from my binary directory
+
+if [[ $# -eq 1 ]]; then
+        dir=$1
+        file=$1
+elif [[ $# -eq 2 ]]; then
+        dir=$1
+        file=$2
+else
+        if [[ $# -ne 0 ]]
+        then
+        echo -e "Name will be \"Proj\" with index"
+        fi
+
+        for i in {1..99}
+        do
+                if ! [[ -e Proj${i} ]]
+                then
+                
+                mkdir ${HOME}/Documents/vhdl_projects/Proj${i}
+                touch ${HOME}/Documents/vhdl_projects/Proj${i}/test.vhdl
+                touch ${HOME}/Documents/vhdl_projects/Proj${i}/test
+                touch ${HOME}/Documents/vhdl_projects/Proj${i}/test_tb.vhdl
+                touch ${HOME}/Documents/vhdl_projects/Proj${i}/test_tb
+                touch ${HOME}/Documents/vhdl_projects/Proj${i}/test_tb.vcd
+
+                echo  "Here you are"
+                cd    ${HOME}/Documents/vhdl_projects/Proj${i}/
+
+                exit $return_success
+
+                fi
+        done
+fi
+
+mkdir ${HOME}/Documents/vhdl_projects/${dir}
+touch ${HOME}/Documents/vhdl_projects/${dir}/${file}.vhdl
+touch ${HOME}/Documents/vhdl_projects/${dir}/${file}
+touch ${HOME}/Documents/vhdl_projects/${dir}/${file}_tb.vhdl
+touch ${HOME}/Documents/vhdl_projects/${dir}/${file}_tb
+touch ${HOME}/Documents/vhdl_projects/${dir}/${file}_tb.vcd
+
+echo  "Here you are"
+cd    ${HOME}/Documents/vhdl_projects/${dir}/
+
+exit $return_success

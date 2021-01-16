@@ -1,0 +1,33 @@
+#! /bin/bash
+#Moved change from my binary directory
+
+if [[ $# -eq 0 ]]; then
+        filename1="test"
+        filename2="test"
+elif [[ $# -eq 1 ]]; then
+        filename1=${1}
+        filename2=${1}
+elif [[ $# -eq 2 ]]; then
+        filename1=${1}
+        filename2=${2}
+else
+        echo "Script must contain two arguments:"
+        echo "1) vhdl filename, 2) executable filename"
+        echo "Please try again"
+        exit 69
+fi
+
+echo -e "Starting script for compiling ${1} file\n"
+
+ghdl -a ${filename1}.vhdl
+ghdl -e ${filename2}
+
+ghdl -a ${filename1}_tb.vhdl
+ghdl -e ${filename2}_tb
+ghdl -r ${filename2}_tb --vcd=${filename2}_tb.vcd
+
+echo -e "Ending of compiling\n"
+
+gtkwave ${filename2}_tb.vcd
+
+exit $return_success
